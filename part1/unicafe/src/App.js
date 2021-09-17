@@ -7,14 +7,12 @@ const App = () => {
 	const [neutral, setNeutral] = useState(0);
 	const [bad, setBad] = useState(0);
 
-	const incCategory = (category) => category + 1;
-
 	return (
 		<div>
 			<Feedback
-				incGood={() => setGood(incCategory(good))}
-				incNeutral={() => setNeutral(incCategory(neutral))}
-				incBad={() => setBad(incCategory(bad))}
+				incGood={() => setGood(good + 1)}
+				incNeutral={() => setNeutral(neutral + 1)}
+				incBad={() => setBad(bad + 1)}
 			/>
 		</div>
 	);
