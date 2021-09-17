@@ -2,7 +2,7 @@ import Part from './Part';
 
 const Content = (props) => {
 	return props.parts.map((part, i) => (
-		<Part key={i} part={part} exercises={props.exercises[i]} />
+		<Part key={i} name={part.name} exercises={part.exercises} />
 	));
 };
 
