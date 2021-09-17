@@ -1,5 +1,4 @@
 import StatisticLine from './StatisticLine';
-import Header from './Header';
 
 const Statistics = (props) => {
 	const sum = props.good + props.neutral + props.bad;
@@ -11,7 +10,6 @@ const Statistics = (props) => {
 
 	return (
 		<div>
-			<Header heading={'Statistics'} />
 			<StatisticLine text='Good' value={props.good} />
 			<StatisticLine text='Neutral' value={props.neutral} />
 			<StatisticLine text='Bad' value={props.bad} />
