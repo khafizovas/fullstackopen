@@ -1,4 +1,4 @@
-import Category from './Category';
+import StatisticLine from './StatisticLine';
 import Header from './Header';
 
 const Statistics = (props) => {
@@ -12,12 +12,12 @@ const Statistics = (props) => {
 	return (
 		<div>
 			<Header heading={'Statistics'} />
-			<Category name='Good' value={props.good} />
-			<Category name='Neutral' value={props.neutral} />
-			<Category name='Bad' value={props.bad} />
-			<Category name='All' value={sum} />
-			<Category name='Average' value={average} />
-			<Category name='Positive' value={positive} />
+			<StatisticLine text='Good' value={props.good} />
+			<StatisticLine text='Neutral' value={props.neutral} />
+			<StatisticLine text='Bad' value={props.bad} />
+			<StatisticLine text='All' value={sum} />
+			<StatisticLine text='Average' value={average} />
+			<StatisticLine text='Positive' value={positive} />
 		</div>
 	);
 };
