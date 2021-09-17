@@ -3,8 +3,11 @@ import Header from './Header';
 
 const Statistics = (props) => {
 	const sum = props.good + props.neutral + props.bad;
-	const average = (props.good - props.bad) / sum || 0;
-	const positive = (props.good * 100) / sum || 0 + '%';
+
+	if (sum === 0) return <p>No feedback given</p>;
+
+	const average = (props.good - props.bad) / sum;
+	const positive = (props.good * 100) / sum + '%';
 
 	return (
 		<div>
