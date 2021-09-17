@@ -9,14 +9,16 @@ const Statistics = (props) => {
 	const positive = (props.good * 100) / sum + '%';
 
 	return (
-		<div>
-			<StatisticLine text='Good' value={props.good} />
-			<StatisticLine text='Neutral' value={props.neutral} />
-			<StatisticLine text='Bad' value={props.bad} />
-			<StatisticLine text='All' value={sum} />
-			<StatisticLine text='Average' value={average} />
-			<StatisticLine text='Positive' value={positive} />
-		</div>
+		<table>
+			<tbody>
+				<StatisticLine text='Good' value={props.good} />
+				<StatisticLine text='Neutral' value={props.neutral} />
+				<StatisticLine text='Bad' value={props.bad} />
+				<StatisticLine text='All' value={sum} />
+				<StatisticLine text='Average' value={average} />
+				<StatisticLine text='Positive' value={positive} />
+			</tbody>
+		</table>
 	);
 };
 
