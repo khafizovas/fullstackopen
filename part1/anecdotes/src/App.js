@@ -13,11 +13,13 @@ const App = () => {
 	];
 
 	const [selected, setSelected] = useState(0);
+
 	const selectRandom = () => {
 		setSelected(Math.floor(Math.random() * anecdotes.length));
 	};
 
 	const [points, setPoints] = useState({});
+
 	const voteForAnAnecdote = () => {
 		const newPoints = {
 			...points,
@@ -26,6 +28,14 @@ const App = () => {
 
 		setPoints(newPoints);
 	};
+
+	const mostVoted = Object.entries(points).reduce(
+		(res, [i, votes]) => (res.votes < votes ? { index: i, votes: votes } : res),
+		{
+			index: 0,
+			votes: points[0],
+		}
+	).index;
 
 	return (
 		<div>
@@ -37,7 +47,11 @@ const App = () => {
 				next={selectRandom}
 			/>
 
-			<Anecdote type={1} text={'Text'} votes={points[selected] || 0} />
+			<Anecdote
+				type={1}
+				text={anecdotes[mostVoted]}
+				votes={points[mostVoted] || 0}
+			/>
 		</div>
 	);
 };
