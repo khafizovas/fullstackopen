@@ -15,7 +15,13 @@ const App = () => {
 	const [selected, setSelected] = useState(0);
 
 	const selectRandom = () => {
-		setSelected(Math.floor(Math.random() * anecdotes.length));
+		let randomInt = Math.floor(Math.random() * anecdotes.length);
+
+		while (randomInt === selected) {
+			randomInt = Math.floor(Math.random() * anecdotes.length);
+		}
+
+		setSelected(randomInt);
 	};
 
 	const [points, setPoints] = useState({});
