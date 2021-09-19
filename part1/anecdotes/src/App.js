@@ -33,7 +33,7 @@ const App = () => {
 		(res, [i, votes]) => (res.votes < votes ? { index: i, votes: votes } : res),
 		{
 			index: 0,
-			votes: points[0],
+			votes: points[0] || 0,
 		}
 	).index;
 
