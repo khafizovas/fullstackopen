@@ -12,7 +12,16 @@ const App = () => {
 
     const addNewPerson = (e) => {
         e.preventDefault()
-        setPersons([...persons, {name: newName}])
+
+        if (isAdded()) {
+            alert(`${newName} is already added to phonebook`)
+        } else {
+            setPersons([...persons, {name: newName}])
+        }
+    }
+
+    const isAdded = () => {
+        return persons.map(person => person.name).includes(newName)
     }
 
     return (
