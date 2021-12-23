@@ -1,4 +1,6 @@
 import React, {useState} from 'react'
+import Filter from "./Filter";
+import PersonForm from "./PersonForm";
 
 const App = () => {
     const [persons, setPersons] = useState([
@@ -10,7 +12,6 @@ const App = () => {
     const [newName, setNewName] = useState('')
     const [newNumber, setNewNumber] = useState('')
     const [curFilter, setCurFilter] = useState('')
-    const [filteredList, setFilteredList] = useState(persons)
 
     const handleNameChange = (e) => {
         setNewName(e.target.value)
@@ -23,7 +24,6 @@ const App = () => {
     const handleFilterChange = (e) => {
         const newFilter = e.target.value
         setCurFilter(newFilter)
-        setFilteredList(persons.filter(person => person.name.includes(newFilter)))
     }
 
     const addNewPerson = (e) => {
@@ -32,7 +32,11 @@ const App = () => {
         if (isAdded()) {
             alert(`${newName} is already added to phonebook`)
         } else {
-            setPersons([...persons, {name: newName, number: newNumber}])
+            setPersons([...persons, {
+                id: persons[persons.length - 1].id + 1,
+                name: newName,
+                number: newNumber
+            }])
         }
     }
 
@@ -43,18 +47,21 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
-            <div>filter shown with: <input value={curFilter} onChange={handleFilterChange}/></div>
+            <Filter curFilter={curFilter} handleFilterChange={handleFilterChange}/>
             <h2>Add a new</h2>
-            <form onSubmit={addNewPerson}>
-                <div>name: <input value={newName} onChange={handleNameChange}/></div>
-                <div>number: <input value={newNumber} onChange={handleNumberChange}/></div>
-                <div>
-                    <button type="submit">add</button>
-                </div>
-            </form>
+            <PersonForm
+                addNewPerson={addNewPerson}
+                newName={newName}
+                handleNameChange={handleNameChange}
+                newNumber={newNumber}
+                handleNumberChange={handleNumberChange}
+            />
             <h2>Numbers</h2>
             <ul>
-                {filteredList.map(person => <li key={person.id}>{person.name} {person.number}</li>)}
+                {persons
+                    .filter(person => person.name.includes(curFilter))
+                    .map(person => <li key={person.id}>{person.name} {person.number}</li>)
+                }
             </ul>
         </div>
     )
