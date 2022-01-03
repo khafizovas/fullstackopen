@@ -56,6 +56,13 @@ const App = () => {
         return persons.map(person => person.name).includes(newName);
     };
 
+    const deletePerson = (toDelete) => {
+        if (window.confirm(`Delete ${toDelete.name}?`))
+            personsService
+                .remove(toDelete.id)
+                .then(response => setPersons(persons.filter(person => person.id != toDelete.id)));
+    };
+
     return (
         <div>
             <h2>Phonebook</h2>
@@ -69,7 +76,7 @@ const App = () => {
                 handleNumberChange={handleNumberChange}
             />
             <h2>Numbers</h2>
-            <Persons persons={persons} curFilter={curFilter}/>
+            <Persons persons={persons} curFilter={curFilter} deletePerson={deletePerson}/>
         </div>
     );
 };
