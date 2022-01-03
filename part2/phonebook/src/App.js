@@ -35,8 +35,10 @@ const App = () => {
     const addNewPerson = (e) => {
         e.preventDefault();
 
-        if (isAdded()) {
-            alert(`${newName} is already added to phonebook`);
+        const existingInd = findByName();
+
+        if (existingInd !== -1) {
+            updatePerson(existingInd);
         } else {
             const personObject = {
                 id: persons[persons.length - 1].id + 1,
@@ -52,8 +54,22 @@ const App = () => {
         }
     };
 
-    const isAdded = () => {
-        return persons.map(person => person.name).includes(newName);
+    const findByName = () => {
+        return persons.findIndex(person => person.name === newName);
+    };
+
+    const updatePerson = (index) => {
+        if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+            const id = persons[index].id;
+
+            personsService
+                .update(id, {...persons[index], number: newNumber})
+                .then(response => {
+                    setPersons(persons.map(person => person.id !== id ? person : response.data));
+                    setNewName('');
+                    setNewNumber('');
+                });
+        }
     };
 
     const deletePerson = (toDelete) => {
