@@ -1,7 +1,5 @@
-import React from "react";
-
 const Filter = (props) => {
-    return (<div>filter shown with: <input value={props.curFilter} onChange={props.handleFilterChange}/></div>)
-}
+    return (<div>filter shown with: <input value={props.curFilter} onChange={props.handleFilterChange}/></div>);
+};
 
-export default Filter
+export default Filter;

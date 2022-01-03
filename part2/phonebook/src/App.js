@@ -1,54 +1,54 @@
-import React, {useState, useEffect} from 'react'
-import axios from "axios";
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
 
-import Filter from "./Filter";
-import PersonForm from "./PersonForm";
-import Persons from "./Persons";
+import Filter from './Filter';
+import PersonForm from './PersonForm';
+import Persons from './Persons';
 
 const App = () => {
-    const [persons, setPersons] = useState([])
-    const [newName, setNewName] = useState('')
-    const [newNumber, setNewNumber] = useState('')
-    const [curFilter, setCurFilter] = useState('')
+    const [persons, setPersons] = useState([]);
+    const [newName, setNewName] = useState('');
+    const [newNumber, setNewNumber] = useState('');
+    const [curFilter, setCurFilter] = useState('');
 
     useEffect(() => {
         axios
             .get('http://localhost:3001/persons')
             .then(response => {
-                setPersons(response.data)
-            })
-    }, [])
+                setPersons(response.data);
+            });
+    }, []);
 
     const handleNameChange = (e) => {
-        setNewName(e.target.value)
-    }
+        setNewName(e.target.value);
+    };
 
     const handleNumberChange = (e) => {
-        setNewNumber(e.target.value)
-    }
+        setNewNumber(e.target.value);
+    };
 
     const handleFilterChange = (e) => {
-        const newFilter = e.target.value
-        setCurFilter(newFilter)
-    }
+        const newFilter = e.target.value;
+        setCurFilter(newFilter);
+    };
 
     const addNewPerson = (e) => {
-        e.preventDefault()
+        e.preventDefault();
 
         if (isAdded()) {
-            alert(`${newName} is already added to phonebook`)
+            alert(`${newName} is already added to phonebook`);
         } else {
             setPersons([...persons, {
                 id: persons[persons.length - 1].id + 1,
                 name: newName,
-                number: newNumber
-            }])
+                number: newNumber,
+            }]);
         }
-    }
+    };
 
     const isAdded = () => {
-        return persons.map(person => person.name).includes(newName)
-    }
+        return persons.map(person => person.name).includes(newName);
+    };
 
     return (
         <div>
@@ -65,7 +65,7 @@ const App = () => {
             <h2>Numbers</h2>
             <Persons persons={persons} curFilter={curFilter}/>
         </div>
-    )
-}
+    );
+};
 
-export default App
+export default App;
