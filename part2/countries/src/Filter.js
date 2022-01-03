@@ -1,7 +1,7 @@
 const Filter = (props) => {
     return (<div>
         Find countries: <input value={props.curFilter} onChange={props.handleFilterChange}/>
-    </div>)
-}
+    </div>);
+};
 
-export default Filter
+export default Filter;

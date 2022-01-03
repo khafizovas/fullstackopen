@@ -7,8 +7,8 @@ const Country = ({country}) => {
         <ul>{Object.values(country.languages)
             .map((language, i) => <li key={i}>{language}</li>)}
         </ul>
-        <img src={country.flags.png}/>
-    </div>)
-}
+        <img src={country.flags.png} alt={'Country flag'}/>
+    </div>);
+};
 
-export default Country
+export default Country;
