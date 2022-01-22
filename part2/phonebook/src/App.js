@@ -5,12 +5,14 @@ import personsService from './services/persons';
 import Filter from './Filter';
 import PersonForm from './PersonForm';
 import Persons from './Persons';
+import Notification from './Notification';
 
 const App = () => {
     const [persons, setPersons] = useState([]);
     const [newName, setNewName] = useState('');
     const [newNumber, setNewNumber] = useState('');
     const [curFilter, setCurFilter] = useState('');
+    const [notification, setNotification] = useState(null);
 
     useEffect(() => {
         personsService.getAll()
@@ -32,6 +34,13 @@ const App = () => {
         setCurFilter(newFilter);
     };
 
+    const notify = ({message, className}) => {
+        setNotification({message: message, className: className});
+        setTimeout(() => {
+            setNotification(null);
+        }, 5000);
+    };
+
     const addNewPerson = (e) => {
         e.preventDefault();
 
@@ -47,6 +56,11 @@ const App = () => {
             };
 
             personsService.create(personObject).then(response => {
+                notify({
+                    message: `Added ${newName}`,
+                    className: 'success',
+                });
+
                 setPersons(persons.concat(response.data));
                 setNewName('');
                 setNewNumber('');
@@ -65,6 +79,11 @@ const App = () => {
             personsService
                 .update(id, {...persons[index], number: newNumber})
                 .then(response => {
+                    notify({
+                        message: `Changed the number of ${persons[index].name}`,
+                        className: 'success',
+                    });
+
                     setPersons(persons.map(person => person.id !== id ? person : response.data));
                     setNewName('');
                     setNewNumber('');
@@ -76,12 +95,20 @@ const App = () => {
         if (window.confirm(`Delete ${toDelete.name}?`))
             personsService
                 .remove(toDelete.id)
-                .then(response => setPersons(persons.filter(person => person.id != toDelete.id)));
+                .then(response => {
+                    notify({
+                        message: `Deleted ${toDelete.name}`,
+                        className: 'success',
+                    });
+
+                    setPersons(persons.filter(person => person.id !== toDelete.id));
+                });
     };
 
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification notification={notification}/>
             <Filter curFilter={curFilter} handleFilterChange={handleFilterChange}/>
             <h2>Add a new</h2>
             <PersonForm
