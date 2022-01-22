@@ -92,7 +92,9 @@ const App = () => {
     };
 
     const deletePerson = (toDelete) => {
-        if (window.confirm(`Delete ${toDelete.name}?`))
+        if (window.confirm(`Delete ${toDelete.name}?`)) {
+            const filtered = persons.filter(person => person.id !== toDelete.id);
+
             personsService
                 .remove(toDelete.id)
                 .then(response => {
@@ -100,9 +102,16 @@ const App = () => {
                         message: `Deleted ${toDelete.name}`,
                         className: 'success',
                     });
-
-                    setPersons(persons.filter(person => person.id !== toDelete.id));
+                })
+                .catch(error => {
+                    notify({
+                        message: `${toDelete.name} was already removed from server`,
+                        className: 'error',
+                    });
                 });
+
+            setPersons(filtered);
+        }
     };
 
     return (
