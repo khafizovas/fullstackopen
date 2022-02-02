@@ -66,8 +66,7 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
 	const body = request.body;
-
-	console.log(body);
+	validateBody(body, response);
 
 	const person = {
 		name: body.name,
@@ -88,4 +87,25 @@ app.listen(PORT, () => {
 
 const generateId = () => {
 	return Math.floor(Math.random() * 1000000);
+};
+
+const validateBody = (body, response) => {
+	console.log(body);
+	if (!body.name) {
+		return response.status(400).json({
+			error: 'Name missing',
+		});
+	}
+
+	if (!body.number) {
+		return response.status(400).json({
+			error: 'Number missing',
+		});
+	}
+
+	if (persons.findIndex((person) => person.name === body.name) !== -1) {
+		return response.status(400).json({
+			error: 'Name must be unique',
+		});
+	}
 };
