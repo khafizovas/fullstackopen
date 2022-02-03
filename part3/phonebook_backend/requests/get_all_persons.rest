@@ -1,1 +1,1 @@
-GET http://localhost:3001/api/persons
+GET https://khafizovas-phonebook.herokuapp.com/api/persons

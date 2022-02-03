@@ -80,18 +80,20 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
 	const body = request.body;
-	validateBody(body, response);
+	const errors = validateBody(body, response);
 
-	const person = {
-		name: body.name,
-		number: body.number,
-		date: new Date(),
-		id: generateId(),
-	};
+	if (!errors) {
+		const person = {
+			name: body.name,
+			number: body.number,
+			date: new Date(),
+			id: generateId(),
+		};
 
-	persons = persons.concat(person);
+		persons = persons.concat(person);
 
-	response.json(person);
+		response.json(person);
+	}
 });
 
 const generateId = () => {
@@ -99,7 +101,6 @@ const generateId = () => {
 };
 
 const validateBody = (body, response) => {
-	console.log(body);
 	if (!body.name) {
 		return response.status(400).json({
 			error: 'Name missing',

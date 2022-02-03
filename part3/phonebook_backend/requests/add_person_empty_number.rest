@@ -1,6 +1,6 @@
-POST http://localhost:3001/api/persons HTTP/1.1
+POST https://khafizovas-phonebook.herokuapp.com/http://localhost:3001/api/persons HTTP/1.1
 content-type: application/json
 
 {
-  "name": "Test",
+  "name": "Test"
 }
