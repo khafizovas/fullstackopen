@@ -1,1 +1,1 @@
-# Deployed on [Heroku](https://khafizovas-phonebook.herokuapp.com/).
+# Fullstack phonebook app deployed on [Heroku](https://khafizovas-phonebook.herokuapp.com/).
