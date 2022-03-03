@@ -7,9 +7,10 @@ const cors = require('cors');
 const app = express();
 
 const Person = require('./models/person');
-const ObjectId = require('mongodb').ObjectID;
 
-morgan.token('body', (req, res) => JSON.stringify(req.body));
+morgan.token('body', (request) => {
+	return request.method === 'POST' ? JSON.stringify(request.body) : '';
+});
 
 app.use(express.json());
 app.use(
@@ -28,36 +29,51 @@ app.get('/', (request, response) => {
 });
 
 app.get('/api/persons', (request, response) => {
-	Person.find({}).then((persons) => {
-		response.json(persons);
-	});
+	Person.find({})
+		.then((persons) => {
+			response.json(persons);
+		})
+		.catch((error) => next(error));
 });
 
 app.get('/info', (request, response) => {
-	const today = new Date();
+	const curDateAndTime = new Date();
 	const date =
-		today.getDate() + '.' + (today.getMonth() + 1) + '.' + today.getFullYear();
+		curDateAndTime.getDate() +
+		'.' +
+		(curDateAndTime.getMonth() + 1) +
+		'.' +
+		curDateAndTime.getFullYear();
 	const time =
-		today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+		curDateAndTime.getHours() +
+		':' +
+		curDateAndTime.getMinutes() +
+		':' +
+		curDateAndTime.getSeconds();
 
 	Person.find({}).then((persons) => {
-		response.send(
-			`<div><p>Phonebook has info for ${persons.length} people.</p><p>${date} ${time}</p></div>`
-		);
+		response
+			.send(
+				`<div><p>Phonebook has info for ${persons.length} people.</p><p>${date} ${time}</p></div>`
+			)
+			.catch((error) => next(error));
 	});
 });
 
-app.get('/api/persons/:id', (request, response) => {
-	const id = request.params.id;
-
-	Person.find({ _id: ObjectId(id) })
-		.then((person) => response.json(person))
-		.catch((error) => response.status(404).end());
+app.get('/api/persons/:id', (request, response, next) => {
+	Person.findById(request.params.id)
+		.then((person) => {
+			if (person) {
+				response.json(person);
+			} else {
+				response.status(404).end();
+			}
+		})
+		.catch((error) => next(error));
 });
 
 app.delete('/api/persons/:id', (request, response) => {
-	const id = request.params.id;
-	Person.findByIdAndRemove(id)
+	Person.findByIdAndRemove(request.params.id)
 		.then((result) => {
 			if (result == null) {
 				response.status(400).end();
@@ -65,7 +81,7 @@ app.delete('/api/persons/:id', (request, response) => {
 				response.status(204).end();
 			}
 		})
-		.catch((error) => response.status(400).end());
+		.catch((error) => next(error));
 });
 
 app.post('/api/persons', (request, response) => {
@@ -79,9 +95,12 @@ app.post('/api/persons', (request, response) => {
 			date: new Date(),
 		});
 
-		person.save().then((savedPerson) => {
-			response.json(savedPerson);
-		});
+		person
+			.save()
+			.then((savedPerson) => {
+				response.json(savedPerson);
+			})
+			.catch((error) => next(error));
 	}
 });
 
@@ -100,3 +119,31 @@ const validateBody = (body, response) => {
 
 	return true;
 };
+
+const errorHandler = (error, request, response, next) => {
+	console.error(error.message);
+
+	switch (error.name) {
+		case 'CastError':
+			return response.status(400).send({ error: 'malformatted id' });
+		case 'MissingSchemaError':
+			return response
+				.status(500)
+				.send({ error: "model 'Person' does not exist" });
+		case 'MongooseServerSelectionError':
+			return response.status(500).send({ error: 'connection error' });
+		case 'ParallelSaveError':
+			return response.status(400).send({ error: 'attempt to parallel save' });
+		case 'ValidationError':
+			return response.status(400).send({ error: error.message });
+		default:
+			next(error);
+	}
+};
+
+const unknownEndpoint = (request, response) => {
+	response.status(404).send({ error: 'Unknown endpoint' });
+};
+
+app.use(unknownEndpoint);
+app.use(errorHandler);
