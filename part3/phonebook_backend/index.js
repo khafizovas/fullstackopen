@@ -51,13 +51,13 @@ app.get('/info', (request, response) => {
 		':' +
 		curDateAndTime.getSeconds();
 
-	Person.find({}).then((persons) => {
-		response
-			.send(
+	Person.find({})
+		.then((persons) => {
+			response.send(
 				`<div><p>Phonebook has info for ${persons.length} people.</p><p>${date} ${time}</p></div>`
-			)
-			.catch((error) => next(error));
-	});
+			);
+		})
+		.catch((error) => next(error));
 });
 
 app.get('/api/persons/:id', (request, response, next) => {
