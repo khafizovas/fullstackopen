@@ -85,21 +85,30 @@ app.delete('/api/persons/:id', (request, response) => {
 });
 
 app.post('/api/persons', (request, response) => {
-	const body = request.body;
-	const isCorrect = validateBody(body, response);
+	const newPerson = createNewPerson(request.body, response);
 
-	if (isCorrect) {
-		const person = new Person({
-			name: body.name,
-			number: body.number,
-			date: new Date(),
-		});
-
-		person
+	if (newPerson) {
+		newPerson
 			.save()
 			.then((savedPerson) => {
 				response.json(savedPerson);
 			})
+			.catch((error) => next(error));
+	}
+});
+
+app.put('/api/persons/:id', (request, response, next) => {
+	if (validateBody(request.body, response)) {
+		const person = {
+			name: request.body.name,
+			number: request.body.number,
+			date: new Date(),
+		};
+
+		Person.findOneAndUpdate({ name: request.body.name }, person, {
+			new: true,
+		})
+			.then((updatedPerson) => response.json(updatedPerson))
 			.catch((error) => next(error));
 	}
 });
@@ -118,6 +127,14 @@ const validateBody = (body, response) => {
 	}
 
 	return true;
+};
+
+const createNewPerson = (body, response) => {
+	const isCorrect = validateBody(body, response);
+
+	return isCorrect === true
+		? new Person({ name: body.name, number: body.number, date: new Date() })
+		: null;
 };
 
 const errorHandler = (error, request, response, next) => {
