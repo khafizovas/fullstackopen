@@ -43,62 +43,62 @@ const App = () => {
 	const addNewPerson = (e) => {
 		e.preventDefault();
 
-		const existingInd = findByName();
+		// const existingInd = findByName();
 
-		if (existingInd !== -1) {
-			updatePerson(existingInd);
-		} else {
-			const personObject = {
-				name: newName,
-				number: newNumber,
-			};
+		// if (existingInd !== -1) {
+		// updatePerson(existingInd);
+		// } else {
+		const personObject = {
+			name: newName,
+			number: newNumber,
+		};
 
-			personsService
-				.create(personObject)
-				.then((response) => {
-					notify({
-						message: `Added ${newName}`,
-						className: 'success',
-					});
-
-					setPersons(persons.concat(response.data));
-					setNewName('');
-					setNewNumber('');
-				})
-				.catch((error) =>
-					notify({ message: error.response.data.error, className: 'error' })
-				);
-		}
-	};
-
-	const findByName = () => {
-		return persons.findIndex((person) => person.name === newName);
-	};
-
-	const updatePerson = (index) => {
-		if (
-			window.confirm(
-				`${newName} is already added to phonebook, replace the old number with a new one?`
-			)
-		) {
-			const id = persons[index].id;
-
-			personsService
-				.update(id, { ...persons[index], number: newNumber })
-				.then((response) => {
-					notify({
-						message: `Changed the number of ${persons[index].name}`,
-						className: 'success',
-					});
-
-					setPersons(
-						persons.map((person) => (person.id !== id ? person : response.data))
-					);
-					setNewName('');
-					setNewNumber('');
+		personsService
+			.create(personObject)
+			.then((response) => {
+				notify({
+					message: `Added ${newName}`,
+					className: 'success',
 				});
-		}
+
+				setPersons(persons.concat(response.data));
+				setNewName('');
+				setNewNumber('');
+			})
+			.catch((error) =>
+				notify({ message: error.response.data.error, className: 'error' })
+			);
+		// }
 	};
+
+	// const findByName = () => {
+	// 	return persons.findIndex((person) => person.name === newName);
+	// };
+	//
+	// const updatePerson = (index) => {
+	// 	if (
+	// 		window.confirm(
+	// 			`${newName} is already added to phonebook, replace the old number with a new one?`
+	// 		)
+	// 	) {
+	// 		const id = persons[index].id;
+
+	// 		personsService
+	// 			.update(id, { ...persons[index], number: newNumber })
+	// 			.then((response) => {
+	// 				notify({
+	// 					message: `Changed the number of ${persons[index].name}`,
+	// 					className: 'success',
+	// 				});
+
+	// 				setPersons(
+	// 					persons.map((person) => (person.id !== id ? person : response.data))
+	// 				);
+	// 				setNewName('');
+	// 				setNewNumber('');
+	// 			});
+	// 	}
+	// };
 
 	const deletePerson = (toDelete) => {
 		if (window.confirm(`Delete ${toDelete.name}?`)) {
